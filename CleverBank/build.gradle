@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'ru.clevertec'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-configuration2:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'org.postgresql:postgresql:42.6.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2'
+
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
