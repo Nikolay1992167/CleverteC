@@ -14,30 +14,32 @@ import ru.clevertec.exception.UserNotFoundException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static ru.clevertec.dao.util.AccountSQLUtil.*;
+
 @RequiredArgsConstructor
 public class AccountDAOImpl implements AccountDAO {
+
     private final BankDAO bankDAO;
     private final UserDAO userDAO;
 
     private Account createAccountFromResultSet(ResultSet resultSet) throws SQLException, IOException, ClassNotFoundException {
         Long id = resultSet.getLong("id");
+        String currency = resultSet.getString("currency");
+        LocalDateTime dateOpen = resultSet.getTimestamp("date_open").toLocalDateTime();
         String number = resultSet.getString("number");
         BigDecimal balance = resultSet.getBigDecimal("balance");
         Long bankId = resultSet.getLong("bank_id");
         Long userId = resultSet.getLong("user_id");
         Bank bank = bankDAO.getBankById(bankId).orElseThrow(() -> new BankNotFoundException(bankId));
         User user = userDAO.getUserById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        return new Account(id, number, balance, bank, user);
+        return new Account(id, currency, dateOpen, number, balance, bank, user);
     }
 
     @Override
@@ -78,15 +80,36 @@ public class AccountDAOImpl implements AccountDAO {
     }
 
     @Override
+    public Optional<Account> getAccountByNumber(String number) {
+        try (Connection connection = DatabaseConnection.initializeDatabase();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ACCOUNT_BY_NUMBER)
+        ) {
+            statement.setString(1, number);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Account account = createAccountFromResultSet(resultSet);
+                    return Optional.of(account);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        } catch (IOException | ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void addAccount(Account account) {
         try (Connection connection = DatabaseConnection.initializeDatabase();
              PreparedStatement statement = connection.prepareStatement(
                      INSERT_NEW_ACCOUNT, RETURN_GENERATED_KEYS)
         ) {
-            statement.setString(1, account.getNumber());
-            statement.setBigDecimal(2, account.getBalance());
-            statement.setLong(3, account.getBank().getId());
-            statement.setLong(4, account.getUser().getId());
+            statement.setString(1, account.getCurrency());
+            statement.setTimestamp(2, Timestamp.valueOf(account.getDateOpen()));
+            statement.setString(3, account.getNumber());
+            statement.setBigDecimal(4, account.getBalance());
+            statement.setLong(5, account.getBank().getId());
+            statement.setLong(6, account.getUser().getId());
             int count = statement.executeUpdate();
             if (count == 0) {
                 throw new ResourceSqlException("Creating account failed, no rows affected.");
@@ -105,10 +128,13 @@ public class AccountDAOImpl implements AccountDAO {
         try (Connection connection = DatabaseConnection.initializeDatabase();
              PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT)
         ) {
-            statement.setString(1, account.getNumber());
-            statement.setBigDecimal(2, account.getBalance());
-            statement.setLong(3, account.getBank().getId());
-            statement.setLong(4, account.getUser().getId());
+            statement.setString(1, account.getCurrency());
+            statement.setTimestamp(2, Timestamp.valueOf(account.getDateOpen()));
+            statement.setString(3, account.getNumber());
+            statement.setBigDecimal(4, account.getBalance());
+            statement.setLong(5, account.getBank().getId());
+            statement.setLong(6, account.getUser().getId());
+            statement.setLong(7, account.getId());
             statement.executeUpdate();
         } catch (IOException | ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);

@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.clevertec.data.user.request.RequestUser;
 import ru.clevertec.data.user.response.ResponseUser;
-import ru.clevertec.entity.Account;
 import ru.clevertec.entity.User;
-
-import java.util.stream.Collectors;
 
 @Data
 @Builder

@@ -43,11 +43,7 @@ public class BankController extends HttpServlet {
         } else if (ControllerUtil.isId(pathInfo)) {
             String id = pathInfo.substring(1);
             ResponseBank bank;
-            try {
-                bank = bankService.getBankById(Long.parseLong(id));
-            } catch (SQLException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            bank = bankService.getBankById(Long.parseLong(id));
             String json = gson.toJson(bank);
             sendJsonResponse(json, resp);
         } else {
@@ -58,11 +54,7 @@ public class BankController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         RequestBank bankDto = gson.fromJson(req.getReader(), RequestBank.class);
-        try {
-            bankService.addBank(bankDto);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        bankService.addBank(bankDto);
         String json = gson.toJson(bankDto);
         sendJsonResponse(json, resp);
     }
@@ -76,11 +68,7 @@ public class BankController extends HttpServlet {
         }
         String id = pathInfo.substring(1);
         RequestBank bank = gson.fromJson(req.getReader(), RequestBank.class);
-        try {
-            bankService.updateBank(Long.parseLong(id), bank);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        bankService.updateBank(Long.parseLong(id), bank);
         String json = gson.toJson(bank);
         sendJsonResponse(json, resp);
     }
@@ -93,11 +81,7 @@ public class BankController extends HttpServlet {
             return;
         }
         String id = pathInfo.substring(1);
-        try {
-            bankService.deleteBank(Long.parseLong(id));
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        bankService.deleteBank(Long.parseLong(id));
         resp.setStatus(204);
     }
 

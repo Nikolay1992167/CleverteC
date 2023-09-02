@@ -1,8 +1,5 @@
 package ru.clevertec.dao;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import ru.clevertec.dao.api.BankDAO;
 import ru.clevertec.dao.db.DatabaseConnection;
 import ru.clevertec.entity.Bank;
@@ -94,6 +91,7 @@ public class BankDAOImpl implements BankDAO {
         ) {
             statement.setString(1, bank.getTitle());
             statement.setString(2, bank.getBic());
+            statement.setLong(3, bank.getId());
             statement.executeUpdate();
         } catch (IOException | ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);

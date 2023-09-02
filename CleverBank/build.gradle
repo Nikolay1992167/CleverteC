@@ -8,6 +8,9 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://repository.aspose.com/repo/'
+    }
 }
 
 dependencies {
@@ -18,6 +21,8 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.6.0'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2'
 
+    implementation group: 'com.aspose', name: 'aspose-pdf', version: '21.9', classifier: 'jdk17'
+
     compileOnly 'org.projectlombok:lombok:1.18.28'
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 
@@ -25,6 +30,7 @@ dependencies {
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
 }
 
 test {

@@ -1,7 +1,6 @@
 package ru.clevertec.controllers;
 
 import com.google.gson.Gson;
-
 import ru.clevertec.dao.AccountDAOImpl;
 import ru.clevertec.dao.BankDAOImpl;
 import ru.clevertec.dao.UserDAOImpl;
@@ -10,7 +9,6 @@ import ru.clevertec.dao.api.BankDAO;
 import ru.clevertec.dao.api.UserDAO;
 import ru.clevertec.data.account.request.RequestAccount;
 import ru.clevertec.data.account.response.ResponseAccount;
-import ru.clevertec.data.bank.response.ResponseBank;
 import ru.clevertec.mapper.AccountMapper;
 import ru.clevertec.service.AccountServiceImpl;
 import ru.clevertec.service.api.AccountService;
@@ -21,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,8 +29,7 @@ public class AccountController extends HttpServlet {
     private final UserDAO userDAO = new UserDAOImpl();
     private final AccountDAO accountDAO = new AccountDAOImpl(bankDAO, userDAO);
     private final AccountMapper accountMapper = new AccountMapper(bankDAO, userDAO);
-
-    AccountService accountService = new AccountServiceImpl(accountDAO, accountMapper);
+    private final AccountService accountService = new AccountServiceImpl(accountDAO, accountMapper);
     private final Gson gson = new Gson();
 
     @Override
@@ -54,6 +50,7 @@ public class AccountController extends HttpServlet {
             resp.sendError(404, String.format("The requested resource [%s] is not available", req.getRequestURI()));
         }
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         RequestAccount accountDto = gson.fromJson(req.getReader(), RequestAccount.class);
@@ -65,7 +62,7 @@ public class AccountController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
-        if (ControllerUtil.isId(pathInfo)) {
+        if (!ControllerUtil.isId(pathInfo)) {
             resp.sendError(400, "Id must be set");
             return;
         }

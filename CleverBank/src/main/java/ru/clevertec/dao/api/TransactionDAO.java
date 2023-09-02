@@ -15,7 +15,7 @@ public interface TransactionDAO {
     List<Transaction> getAllTransactions();
 
     /**
-     * Returns saved product
+     * Returns saved transaction
      *
      * @param id - transaction id
      * @return - transaction if contains

@@ -1,6 +1,8 @@
 package ru.clevertec.mapper;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import ru.clevertec.dao.api.BankDAO;
 import ru.clevertec.dao.api.UserDAO;
 import ru.clevertec.data.account.request.RequestAccount;
@@ -11,8 +13,7 @@ import ru.clevertec.entity.User;
 import ru.clevertec.exception.BankNotFoundException;
 import ru.clevertec.exception.UserNotFoundException;
 
-import java.io.IOException;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -22,9 +23,12 @@ public class AccountMapper {
     private BankDAO bankDAO;
     private UserDAO userDAO;
 
+
     public ResponseAccount buildAccountResponse(Account account) {
         return ResponseAccount.builder()
                 .id(account.getId())
+                .currency(account.getCurrency())
+                .dateOpen(String.valueOf(account.getDateOpen()))
                 .number(account.getNumber())
                 .balance(account.getBalance())
                 .bankTitle(account.getBank().getTitle())
@@ -38,6 +42,8 @@ public class AccountMapper {
         User user = userDAO.getUserById(requestAccount.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(requestAccount.getUserId()));
         return Account.builder()
+                .currency(requestAccount.getCurrency())
+                .dateOpen(LocalDateTime.parse(requestAccount.getDateOpen()))
                 .number(requestAccount.getNumber())
                 .balance(requestAccount.getBalance())
                 .bank(bank)

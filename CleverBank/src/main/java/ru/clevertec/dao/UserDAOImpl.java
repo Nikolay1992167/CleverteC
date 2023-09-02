@@ -1,11 +1,8 @@
 package ru.clevertec.dao;
 
 import lombok.RequiredArgsConstructor;
-import ru.clevertec.dao.api.AccountDAO;
-import ru.clevertec.dao.api.BankDAO;
 import ru.clevertec.dao.api.UserDAO;
 import ru.clevertec.dao.db.DatabaseConnection;
-import ru.clevertec.entity.Account;
 import ru.clevertec.entity.User;
 import ru.clevertec.exception.ResourceSqlException;
 
@@ -20,6 +17,7 @@ import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static ru.clevertec.dao.util.UserSqlUtil.*;
+
 @RequiredArgsConstructor
 public class UserDAOImpl implements UserDAO {
 

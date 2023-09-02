@@ -1,14 +1,19 @@
 package ru.clevertec.controllers;
 
-
 import com.google.gson.Gson;
+import ru.clevertec.dao.AccountDAOImpl;
+import ru.clevertec.dao.BankDAOImpl;
+import ru.clevertec.dao.TransactionDAOImpl;
 import ru.clevertec.dao.UserDAOImpl;
+import ru.clevertec.dao.api.AccountDAO;
+import ru.clevertec.dao.api.BankDAO;
+import ru.clevertec.dao.api.TransactionDAO;
 import ru.clevertec.dao.api.UserDAO;
-import ru.clevertec.data.user.request.RequestUser;
-import ru.clevertec.data.user.response.ResponseUser;
-import ru.clevertec.mapper.UserMapper;
-import ru.clevertec.service.UserServiceImpl;
-import ru.clevertec.service.api.UserService;
+import ru.clevertec.data.transaction.request.RequestTransaction;
+import ru.clevertec.data.transaction.response.ResponseTransaction;
+import ru.clevertec.mapper.TransactionMapper;
+import ru.clevertec.service.TransactionServiceImpl;
+import ru.clevertec.service.api.TransactionService;
 import ru.clevertec.util.ControllerUtil;
 
 import javax.servlet.annotation.WebServlet;
@@ -19,27 +24,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@WebServlet("/users/*")
-public class UserController extends HttpServlet {
-
+@WebServlet("/transactions/*")
+public class TransactionController extends HttpServlet {
+    private final BankDAO bankDAO = new BankDAOImpl();
     private final UserDAO userDAO = new UserDAOImpl();
-    private final UserMapper userMapper = new UserMapper();
-    private final UserService userService = new UserServiceImpl(userDAO, userMapper);
+    private final AccountDAO accountDAO = new AccountDAOImpl(bankDAO, userDAO);
+    private final TransactionDAO transactionDAO = new TransactionDAOImpl(accountDAO);
+    private final TransactionMapper transactionMapper = new TransactionMapper(accountDAO);
+    private final TransactionService transactionService = new TransactionServiceImpl(transactionDAO, transactionMapper);
     private final Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
         if (Objects.isNull(pathInfo)) {
-            List<ResponseUser> users;
-            users = userService.getAllUsers();
-            String json = gson.toJson(users);
+            List<ResponseTransaction> transactions;
+            transactions = transactionService.getAllTransactions();
+            String json = gson.toJson(transactions);
             sendJsonResponse(json, resp);
         } else if (ControllerUtil.isId(pathInfo)) {
             String id = pathInfo.substring(1);
-            ResponseUser user;
-            user = userService.getUserById(Long.parseLong(id));
-            String json = gson.toJson(user);
+            ResponseTransaction transaction;
+            transaction = transactionService.getTransactionById(Long.parseLong(id));
+            String json = gson.toJson(transaction);
             sendJsonResponse(json, resp);
         } else {
             resp.sendError(404, String.format("The requested resource [%s] is not available", req.getRequestURI()));
@@ -48,9 +55,9 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        RequestUser userDto = gson.fromJson(req.getReader(), RequestUser.class);
-        userService.addUser(userDto);
-        String json = gson.toJson(userDto);
+        RequestTransaction transactionDto = gson.fromJson(req.getReader(), RequestTransaction.class);
+        transactionService.addTransaction(transactionDto);
+        String json = gson.toJson(transactionDto);
         sendJsonResponse(json, resp);
     }
 
@@ -58,13 +65,13 @@ public class UserController extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
         if (!ControllerUtil.isId(pathInfo)) {
-            resp.sendError(400, "Id must be set!");
+            resp.sendError(400, "Id must be set");
             return;
         }
         String id = pathInfo.substring(1);
-        RequestUser user = gson.fromJson(req.getReader(), RequestUser.class);
-        userService.updateUser(Long.parseLong(id), user);
-        String json = gson.toJson(user);
+        RequestTransaction transactionDto = gson.fromJson(req.getReader(), RequestTransaction.class);
+        transactionService.updateTransaction(Long.parseLong(id), transactionDto);
+        String json = gson.toJson(transactionDto);
         sendJsonResponse(json, resp);
     }
 
@@ -72,11 +79,11 @@ public class UserController extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
         if (!ControllerUtil.isId(pathInfo)) {
-            resp.sendError(400, "Invalid id!");
+            resp.sendError(400, "Id must be set!");
             return;
         }
         String id = pathInfo.substring(1);
-        userService.deleteUser(Long.parseLong(id));
+        transactionService.deleteTransaction(Long.parseLong(id));
         resp.setStatus(204);
     }
 

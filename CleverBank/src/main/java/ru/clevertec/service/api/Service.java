@@ -1,18 +1,15 @@
 package ru.clevertec.service.api;
 
-import ru.clevertec.entity.Transaction;
+import ru.clevertec.data.transaction.request.RequestTransaction;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public interface Service {
-    void deposit(Long accountId, BigDecimal amount);
+    void depositMoney(RequestTransaction requestTransaction);
 
-    void withdraw(Long accountId, BigDecimal amount);
+    void withdrawMoney(RequestTransaction requestTransaction);
 
-    void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) throws SQLException;
+    void transferMoney(RequestTransaction requestTransaction) throws SQLException;
 
     void accrueInterest();
-
-    void printReceipt(Transaction transaction);
 }

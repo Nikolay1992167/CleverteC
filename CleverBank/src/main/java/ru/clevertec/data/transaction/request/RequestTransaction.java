@@ -1,25 +1,20 @@
-package ru.clevertec.entity;
+package ru.clevertec.data.transaction.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.clevertec.entity.TypeTransaction;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
-    private Long id;
+public class RequestTransaction {
     private TypeTransaction typeTransaction;
-    @Builder.Default
-    private Account fromAccount = null;
-    @Builder.Default
-    private Account toAccount = null;
+    private String accountNumber;
     private BigDecimal amount;
-    private LocalDateTime date;
+    private String date;
 }
-

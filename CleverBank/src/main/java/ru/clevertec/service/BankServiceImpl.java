@@ -28,27 +28,27 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public ResponseBank getBankById(Long id) throws SQLException, IOException, ClassNotFoundException {
+    public ResponseBank getBankById(Long id) {
         Optional<Bank> optionalBank = bankDAO.getBankById(id);
         Bank bank = optionalBank.orElseThrow(() -> new BankNotFoundException(id));
         return bankMapper.buildBankResponse(bank);
     }
 
     @Override
-    public void addBank(RequestBank requestBank) throws SQLException, IOException, ClassNotFoundException {
+    public void addBank(RequestBank requestBank) {
         Bank bank = bankMapper.buildBank(requestBank);
         bankDAO.addBank(bank);
     }
 
     @Override
-    public void updateBank(Long id, RequestBank updateRequestBank) throws SQLException, IOException, ClassNotFoundException {
+    public void updateBank(Long id, RequestBank updateRequestBank) {
         Bank bank = bankMapper.buildBank(updateRequestBank);
         bank.setId(id);
         bankDAO.updateBank(bank);
     }
 
     @Override
-    public void deleteBank(Long id) throws SQLException, IOException, ClassNotFoundException {
+    public void deleteBank(Long id) {
         bankDAO.deleteBank(id);
     }
 }
