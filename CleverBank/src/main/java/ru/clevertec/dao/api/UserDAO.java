@@ -3,47 +3,45 @@ package ru.clevertec.dao.api;
 import ru.clevertec.entity.User;
 import ru.clevertec.exception.UserNotFoundException;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserDAO {
 
     /**
-     * Find all users
+     * Find all Users
      *
-     * @return List of all users
+     * @return List of all Users
      */
     List<User> getAllUsers();
 
     /**
-     * Returns saved user
+     * Returns saved User
      *
-     * @param id - user id
+     * @param id - User id
      * @return - User if contains
      * @throws UserNotFoundException - if not found
      */
     Optional<User> getUserById(Long id);
 
     /**
-     * Save a new user
+     * Save new User
      *
-     * @param user new user without id
+     * @param user new User without id
      */
     void addUser(User user);
 
     /**
-     * Update current user
+     * Update current User
      *
      * @param user - updated
      */
     void updateUser(User user);
 
     /**
-     * Delete an user by ID
+     * Delete an User by ID
      *
-     * @param id the user ID
+     * @param id the User ID
      */
     void deleteUser(Long id);
 }

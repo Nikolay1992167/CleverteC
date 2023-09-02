@@ -8,39 +8,39 @@ import java.util.Optional;
 
 public interface TransactionDAO {
     /**
-     * Find all transaction
+     * Find all Transaction
      *
-     * @return List of all transactions
+     * @return List of all Transactions
      */
     List<Transaction> getAllTransactions();
 
     /**
-     * Returns saved transaction
+     * Returns saved Transaction
      *
-     * @param id - transaction id
-     * @return - transaction if contains
+     * @param id - Transaction id
+     * @return - Transaction if contains
      * @throws TransactionNotFoundException - if not found
      */
     Optional<Transaction> getTransactionById(Long id);
 
     /**
-     * Save a new transactional
+     * Save a new Transactional
      *
-     * @param transaction new transaction without id
+     * @param transaction new Transaction without id
      */
     void addTransaction(Transaction transaction);
 
     /**
-     * Update current transaction
+     * Update current Transaction
      *
      * @param transaction - updated
      */
     void updateTransaction(Transaction transaction);
 
     /**
-     * Delete a transaction by ID
+     * Delete Transaction by ID
      *
-     * @param id the transaction ID
+     * @param id the Transaction ID
      */
     void deleteTransaction(Long id);
 }

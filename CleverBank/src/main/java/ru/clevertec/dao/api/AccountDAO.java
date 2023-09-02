@@ -8,48 +8,48 @@ import java.util.Optional;
 
 public interface AccountDAO {
     /**
-     * Find all accounts
+     * Find all Accounts
      *
-     * @return List of all accounts
+     * @return List of all Accounts
      */
     List<Account> getAllAccounts();
 
     /**
      * Returns saved account
      *
-     * @param id - account id
+     * @param id - Account id
      * @return - Account if contains
      * @throws AccountNotFoundException - if not found
      */
     Optional<Account> getAccountById(Long id);
 
     /**
-     * Returns saved account
+     * Returns saved Account
      *
-     * @param number- account number
+     * @param number- Account number
      * @return - Account if contains
      * @throws AccountNotFoundException - if not found
      */
     Optional<Account> getAccountByNumber(String number);
 
     /**
-     * Save a new account
+     * Save new Account
      *
-     * @param account new product without id
+     * @param account new Account without id
      */
     void addAccount(Account account);
 
     /**
-     * Update current account
+     * Update current Account
      *
      * @param account - updated
      */
     void updateAccount(Account account);
 
     /**
-     * Delete a account by ID
+     * Delete Account by ID
      *
-     * @param id the account ID
+     * @param id Account ID
      */
     void deleteAccount(Long id);
 }

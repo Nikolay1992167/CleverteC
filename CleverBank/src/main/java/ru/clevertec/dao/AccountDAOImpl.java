@@ -15,7 +15,7 @@ import ru.clevertec.exception.UserNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class AccountDAOImpl implements AccountDAO {
     private Account createAccountFromResultSet(ResultSet resultSet) throws SQLException, IOException, ClassNotFoundException {
         Long id = resultSet.getLong("id");
         String currency = resultSet.getString("currency");
-        LocalDateTime dateOpen = resultSet.getTimestamp("date_open").toLocalDateTime();
+        LocalDate dateOpen = LocalDate.parse((CharSequence) resultSet.getTimestamp("date_open"));
         String number = resultSet.getString("number");
         BigDecimal balance = resultSet.getBigDecimal("balance");
         Long bankId = resultSet.getLong("bank_id");
@@ -105,7 +105,7 @@ public class AccountDAOImpl implements AccountDAO {
                      INSERT_NEW_ACCOUNT, RETURN_GENERATED_KEYS)
         ) {
             statement.setString(1, account.getCurrency());
-            statement.setTimestamp(2, Timestamp.valueOf(account.getDateOpen()));
+            statement.setTimestamp(2, Timestamp.valueOf(account.getDateOpen().atStartOfDay()));
             statement.setString(3, account.getNumber());
             statement.setBigDecimal(4, account.getBalance());
             statement.setLong(5, account.getBank().getId());
@@ -129,7 +129,7 @@ public class AccountDAOImpl implements AccountDAO {
              PreparedStatement statement = connection.prepareStatement(UPDATE_ACCOUNT)
         ) {
             statement.setString(1, account.getCurrency());
-            statement.setTimestamp(2, Timestamp.valueOf(account.getDateOpen()));
+            statement.setTimestamp(2, Timestamp.valueOf(account.getDateOpen().atStartOfDay()));
             statement.setString(3, account.getNumber());
             statement.setBigDecimal(4, account.getBalance());
             statement.setLong(5, account.getBank().getId());

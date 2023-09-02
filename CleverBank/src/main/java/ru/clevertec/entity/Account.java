@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Account {
     private Long id;
     private String currency;
-    private LocalDateTime dateOpen;
+    private LocalDate dateOpen;
     private String number;
     private BigDecimal balance;
     private Bank bank;

@@ -5,6 +5,6 @@ public class TransactionNotFoundException extends IllegalArgumentException{
         super(String.format("Transaction with id '%d' not found", id));
     }
     public TransactionNotFoundException(String number) {
-        super(String.format("Transaction with id '%s' not found", number));
+        super(String.format("Transaction with id '%s' not found!", number));
     }
 }

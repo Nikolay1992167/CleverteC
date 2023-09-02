@@ -11,6 +11,7 @@ import ru.clevertec.entity.Transaction;
 import ru.clevertec.entity.TypeTransaction;
 import ru.clevertec.exception.AccountNotFoundException;
 import ru.clevertec.exception.InitializationException;
+import ru.clevertec.exception.AmountFundsException;
 import ru.clevertec.mapper.TransactionMapper;
 import ru.clevertec.receipt.ReceiptPrinter;
 import ru.clevertec.service.api.Service;
@@ -25,9 +26,6 @@ import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import static ru.clevertec.service.constants.Constants.INSUFFICIENT_FUNDS;
-import static ru.clevertec.service.constants.Constants.INVALID_AMOUNT;
 
 @Data
 @RequiredArgsConstructor
@@ -55,7 +53,7 @@ public class ServiceImpl implements Service {
         BigDecimal amount = requestTransaction.getAmount();
         String accountNumber = requestTransaction.getAccountNumber();
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(INVALID_AMOUNT);
+            throw new AmountFundsException("Invalid amount!");
         }
         Transaction transaction;
         synchronized (accountDAO) {
@@ -69,7 +67,6 @@ public class ServiceImpl implements Service {
             }
         }
         ReceiptPrinter.printReceipt(transaction);
-        executor.shutdown();
     }
 
     @Override
@@ -77,7 +74,7 @@ public class ServiceImpl implements Service {
         BigDecimal amount = requestTransaction.getAmount();
         String accountNumber = requestTransaction.getAccountNumber();
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(INVALID_AMOUNT);
+            throw new AmountFundsException("Invalid amount!");
         }
         Transaction transaction;
         synchronized (accountDAO) {
@@ -85,7 +82,7 @@ public class ServiceImpl implements Service {
                 Optional<Account> accountOptional = accountDAO.getAccountByNumber(accountNumber);
                 Account account = accountOptional.orElseThrow(() -> new AccountNotFoundException(accountNumber));
                 if (account.getBalance().compareTo(amount) < 0) {
-                    throw new IllegalStateException(INSUFFICIENT_FUNDS);
+                    throw new AmountFundsException("Insufficient funds!");
                 }
                 account.setBalance(account.getBalance().subtract(amount));
                 accountDAO.updateAccount(account);
@@ -94,7 +91,6 @@ public class ServiceImpl implements Service {
             }
         }
         ReceiptPrinter.printReceipt(transaction);
-        executor.shutdown();
     }
 
     @Override
@@ -113,7 +109,7 @@ public class ServiceImpl implements Service {
                 Account fromAccount = accountDAO.getAccountByNumber(fromAccountNumber).orElseThrow(() -> new AccountNotFoundException(fromAccountNumber));
                 Account toAccount = accountDAO.getAccountByNumber(toAccountNumber).orElseThrow(() -> new AccountNotFoundException(toAccountNumber));
                 if (fromAccount.getBalance().compareTo(amount) < 0) {
-                    throw new IllegalArgumentException(INVALID_AMOUNT);
+                    throw new AmountFundsException("Invalid amount!");
                 }
                 fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
                 toAccount.setBalance(toAccount.getBalance().add(amount));
@@ -124,7 +120,6 @@ public class ServiceImpl implements Service {
             }
         }
         ReceiptPrinter.printReceipt(transaction);
-        executor.shutdown();
     }
 
     @Override
@@ -133,7 +128,7 @@ public class ServiceImpl implements Service {
         List<Account> accounts = accountDAO.getAllAccounts();
         LocalDate today = LocalDate.now();
         for (Account account : accounts) {
-            if (today.getDayOfMonth() == today.lengthOfMonth()) {
+            if (isLastDayOfMonth(today)) {
                 String numberAccount = account.getNumber();
                 BigDecimal interestRate = BigDecimal.valueOf(getInterestRate()).divide(BigDecimal.valueOf(100));
                 BigDecimal interest = account.getBalance().multiply(BigDecimal.ONE.add(interestRate)).setScale(2, RoundingMode.HALF_UP);
@@ -151,5 +146,10 @@ public class ServiceImpl implements Service {
                 throw new InitializationException("This operation is performed on the last day of the month!");
             }
         }
+    }
+    public boolean isLastDayOfMonth(LocalDate date) {
+        int dayOfMonth = date.getDayOfMonth();
+        int lengthOfMonth = date.lengthOfMonth();
+        return dayOfMonth == lengthOfMonth;
     }
 }

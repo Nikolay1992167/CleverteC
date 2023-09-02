@@ -10,16 +10,16 @@ import java.util.Optional;
 
 public interface BankDAO {
     /**
-     * Find all banks
+     * Find all Banks
      *
-     * @return List of all banks
+     * @return List of all Banks
      */
     List<Bank> getAllBanks() throws SQLException, IOException, ClassNotFoundException;
 
     /**
-     * Returns saved bank
+     * Returns saved Bank
      *
-     * @param id - bank id
+     * @param id - Bank id
      * @return - Bank if contains
      * @throws BankNotFoundException - if not found
      */
@@ -28,21 +28,21 @@ public interface BankDAO {
     /**
      * Save a new bank
      *
-     * @param bank new bank without id
+     * @param bank new Bank without id
      */
     void addBank(Bank bank);
 
     /**
-     * Update current bank
+     * Update current Bank
      *
      * @param bank - updated
      */
     void updateBank(Bank bank);
 
     /**
-     * Delete a bank by ID
+     * Delete a Bank by ID
      *
-     * @param id the bank ID
+     * @param id the Bank ID
      */
     void deleteBank(Long id);
 }

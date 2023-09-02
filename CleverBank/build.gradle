@@ -23,6 +23,7 @@ dependencies {
 
     implementation group: 'com.aspose', name: 'aspose-pdf', version: '21.9', classifier: 'jdk17'
 
+
     compileOnly 'org.projectlombok:lombok:1.18.28'
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 
@@ -30,7 +31,9 @@ dependencies {
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
 }
 
 test {
