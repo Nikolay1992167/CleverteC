@@ -1,5 +1,5 @@
 # CleverBank application
-## Author: [NIkolay Minich](https://github.com/Nikolay1992167/Clevertec)
+# Author: [NIkolay Minich](https://github.com/Nikolay1992167/Clevertec)
 
 The application implements a service for adding funds to the account,
 withdrawing from the account and transferring funds between accounts. 
