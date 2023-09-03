@@ -107,7 +107,7 @@ public class ServiceImplTest {
     @Test
     void transferMoneyTest() {
         RequestTransaction request = new RequestTransaction(TypeTransaction.TRANSFER, "65654,951753", new BigDecimal("100"), "2021-09-21T10:00:00");
-        Account fromAccount = new Account(5L, "BYN", LocalDate.parse("2021-09-21T10:00:00"), "65654", new BigDecimal("8000"), new Bank(1L, "VTB", "BTV"), new User(3L, "Igor Popov", "popov@mail.com", "popov3"));
+        Account fromAccount = new Account(5L, "BYN", LocalDate.now(), "65654", new BigDecimal("8000"), new Bank(1L, "VTB", "BTV"), new User(3L, "Igor Popov", "popov@mail.com", "popov3"));
         Account toAccount = new Account(3L, "BYN", LocalDate.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb"));
         Transaction transaction = new Transaction(1L, TypeTransaction.TRANSFER, fromAccount, toAccount, new BigDecimal("100"), LocalDateTime.parse("2021-09-21T10:00:00"));
         when(accountDAO.getAccountByNumber("65654")).thenReturn(Optional.of(fromAccount));
@@ -155,7 +155,7 @@ public class ServiceImplTest {
     @Test
     void transferMoneyTestThrowExceptionIfInsufficientFunds() {
         RequestTransaction request = new RequestTransaction(TypeTransaction.TRANSFER, "65654,951753", new BigDecimal("300"), "2021-09-21T10:00:00");
-        Account fromAccount = new Account(5L, "BYN", LocalDate.parse("2021-09-21T10:00:00"), "65654", new BigDecimal("100"), new Bank(1L, "VTB", "BTV"), new User(3L, "Igor Popov", "popov@mail.com", "popov3"));
+        Account fromAccount = new Account(5L, "BYN", LocalDate.now(), "65654", new BigDecimal("100"), new Bank(1L, "VTB", "BTV"), new User(3L, "Igor Popov", "popov@mail.com", "popov3"));
         Account toAccount = new Account(3L, "BYN", LocalDate.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb"));
         when(accountDAO.getAccountByNumber("65654")).thenReturn(Optional.of(fromAccount));
         when(accountDAO.getAccountByNumber("951753")).thenReturn(Optional.of(toAccount));
