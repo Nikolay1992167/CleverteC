@@ -10,8 +10,8 @@ import ru.clevertec.entity.Account;
 import ru.clevertec.entity.Transaction;
 import ru.clevertec.entity.TypeTransaction;
 import ru.clevertec.exception.AccountNotFoundException;
-import ru.clevertec.exception.InitializationException;
 import ru.clevertec.exception.AmountFundsException;
+import ru.clevertec.exception.InitializationException;
 import ru.clevertec.mapper.TransactionMapper;
 import ru.clevertec.receipt.ReceiptPrinter;
 import ru.clevertec.service.api.Service;
@@ -64,9 +64,9 @@ public class ServiceImpl implements Service {
                 accountDAO.updateAccount(account);
                 transaction = transactionMapper.buildTransaction(requestTransaction);
                 transactionDAO.addTransaction(transaction);
+                ReceiptPrinter.printReceipt(transaction);
             }
         }
-        ReceiptPrinter.printReceipt(transaction);
     }
 
     @Override
@@ -88,9 +88,9 @@ public class ServiceImpl implements Service {
                 accountDAO.updateAccount(account);
                 transaction = transactionMapper.buildTransaction(requestTransaction);
                 transactionDAO.addTransaction(transaction);
+                ReceiptPrinter.printReceipt(transaction);
             }
         }
-        ReceiptPrinter.printReceipt(transaction);
     }
 
     @Override
@@ -117,9 +117,9 @@ public class ServiceImpl implements Service {
                 accountDAO.updateAccount(toAccount);
                 transaction = transactionMapper.buildTransaction(requestTransaction);
                 transactionDAO.addTransaction(transaction);
+                ReceiptPrinter.printReceipt(transaction);
             }
         }
-        ReceiptPrinter.printReceipt(transaction);
     }
 
     @Override
@@ -142,11 +142,12 @@ public class ServiceImpl implements Service {
                         ReceiptPrinter.printReceipt(transaction);
                     }
                 }
-            }else {
+            } else {
                 throw new InitializationException("This operation is performed on the last day of the month!");
             }
         }
     }
+
     public boolean isLastDayOfMonth(LocalDate date) {
         int dayOfMonth = date.getDayOfMonth();
         int lengthOfMonth = date.lengthOfMonth();

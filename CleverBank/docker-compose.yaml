@@ -9,7 +9,7 @@ services:
     build:
       context: .
     container_name: CleverBank
-    restart: on-failure
+    restart: always
     ports:
       - '8080:8080'
     depends_on:

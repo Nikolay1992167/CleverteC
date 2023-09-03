@@ -12,14 +12,12 @@ import ru.clevertec.mapper.TransactionMapper;
 import ru.clevertec.service.TransactionServiceImpl;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,8 +39,8 @@ public class TransactionServiceImplTest {
     @Test
     void getAllTransactionsTest() {
         List<Transaction> transactions = List.of(
-                new Transaction(1L, TypeTransaction.DEPOSIT, null, new Account(5L, "BYN", LocalDate.now(), "65654", new BigDecimal("100"), new Bank(1L, "VTB", "BTV"), new User(3L, "Igor Popov", "popov@mail.com", "popov3")), new BigDecimal("100"), LocalDateTime.now()),
-                new Transaction(2L, TypeTransaction.WITHDRAWAL, new Account(3L, "BYN", LocalDate.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), null, new BigDecimal("200"), LocalDateTime.now())
+                new Transaction(1L, TypeTransaction.DEPOSIT, null, new Account(5L, "BYN", LocalDateTime.now(), "65654", new BigDecimal("100"), new Bank(1L, "VTB", "BTV"), new User(3L, "Igor Popov", "popov@mail.com", "popov3")), new BigDecimal("100"), LocalDateTime.now()),
+                new Transaction(2L, TypeTransaction.WITHDRAWAL, new Account(3L, "BYN", LocalDateTime.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), null, new BigDecimal("200"), LocalDateTime.now())
         );
         List<ResponseTransaction> responseTransactions = List.of(
                 new ResponseTransaction(1L, TypeTransaction.DEPOSIT, null, "65654", new BigDecimal("100"), String.valueOf(LocalDateTime.now())),
@@ -65,7 +63,7 @@ public class TransactionServiceImplTest {
     @Test
     void getTransactionByIdTest() {
         Long id = 1L;
-        Transaction transaction = new Transaction(id, TypeTransaction.DEPOSIT, null, new Account(3L, "BYN", LocalDate.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), new BigDecimal("100"), LocalDateTime.now());
+        Transaction transaction = new Transaction(id, TypeTransaction.DEPOSIT, null, new Account(3L, "BYN", LocalDateTime.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), new BigDecimal("100"), LocalDateTime.now());
         ResponseTransaction responseTransaction = new ResponseTransaction(id, TypeTransaction.DEPOSIT, null, "951753", new BigDecimal("2000"), String.valueOf(LocalDateTime.now()));
         when(transactionDAO.getTransactionById(id)).thenReturn(Optional.of(transaction));
         when(transactionMapper.buildTransactionResponse(transaction)).thenReturn(responseTransaction);
@@ -89,7 +87,7 @@ public class TransactionServiceImplTest {
     @Test
     void addTransactionTest() {
         RequestTransaction requestTransaction = new RequestTransaction(TypeTransaction.DEPOSIT, "951753", new BigDecimal("100"), String.valueOf(LocalDateTime.now()));
-        Transaction transaction = new Transaction(null, TypeTransaction.DEPOSIT, null, new Account(3L, "BYN", LocalDate.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), new BigDecimal("100"), LocalDateTime.now());
+        Transaction transaction = new Transaction(null, TypeTransaction.DEPOSIT, null, new Account(3L, "BYN", LocalDateTime.now(), "951753", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), new BigDecimal("100"), LocalDateTime.now());
         when(transactionMapper.buildTransaction(requestTransaction)).thenReturn(transaction);
         service.addTransaction(requestTransaction);
         verify(transactionMapper).buildTransaction(requestTransaction);
@@ -100,7 +98,7 @@ public class TransactionServiceImplTest {
     void updateTransactionTest() {
         Long id = 1L;
         RequestTransaction requestTransaction = new RequestTransaction(TypeTransaction.WITHDRAWAL, "456", new BigDecimal("200"), String.valueOf(LocalDateTime.now()));
-        Transaction transaction = new Transaction(id, TypeTransaction.WITHDRAWAL,new Account(3L, "BYN", LocalDate.now(), "456", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), null, new BigDecimal("200"), LocalDateTime.now());
+        Transaction transaction = new Transaction(id, TypeTransaction.WITHDRAWAL, new Account(3L, "BYN", LocalDateTime.now(), "456", new BigDecimal("2000"), new Bank(1L, "VTB", "BTV"), new User(9L, "Vasja Blinov", "blinov@mail.com", "vonilb")), null, new BigDecimal("200"), LocalDateTime.now());
         when(transactionMapper.buildTransaction(requestTransaction)).thenReturn(transaction);
         service.updateTransaction(id, requestTransaction);
         verify(transactionMapper).buildTransaction(requestTransaction);

@@ -6,14 +6,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/db")
 public class CreateTablesController extends HttpServlet {
@@ -24,9 +24,8 @@ public class CreateTablesController extends HttpServlet {
         } catch (SQLException | ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
-        File file = new File("E:\\Java projects\\Clevertec\\CleverBank\\src\\main\\resources\\dbinit\\create_sql.sql");
-        List<String> lines = Files.readAllLines(file.toPath());
-        String createSql = String.join("\n", lines);
+        InputStream createStream = this.getClass().getClassLoader().getResourceAsStream("dbinit/create_sql.sql");
+        String createSql = new BufferedReader(new InputStreamReader(createStream)).lines().collect(Collectors.joining("\n"));
 
         String[] createQueries = createSql.split(";");
         try (Statement stmt = connection.createStatement()) {
@@ -37,7 +36,8 @@ public class CreateTablesController extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        String insertSql = Files.readString(Paths.get("E:\\Java projects\\Clevertec\\CleverBank\\src\\main\\resources\\dbinit\\insert_sql.sql"));
+        InputStream insertStream = this.getClass().getClassLoader().getResourceAsStream("dbinit/insert_sql.sql");
+        String insertSql = new BufferedReader(new InputStreamReader(insertStream)).lines().collect(Collectors.joining("\n"));
         String[] insertQueries = insertSql.split(";");
         try (Statement stmt = connection.createStatement()) {
             for (String query : insertQueries) {
@@ -46,6 +46,5 @@ public class CreateTablesController extends HttpServlet {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

@@ -13,7 +13,7 @@ import ru.clevertec.entity.User;
 import ru.clevertec.exception.BankNotFoundException;
 import ru.clevertec.exception.UserNotFoundException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -43,7 +43,7 @@ public class AccountMapper {
                 .orElseThrow(() -> new UserNotFoundException(requestAccount.getUserId()));
         return Account.builder()
                 .currency(requestAccount.getCurrency())
-                .dateOpen(LocalDate.parse(requestAccount.getDateOpen()))
+                .dateOpen(LocalDateTime.parse(requestAccount.getDateOpen()))
                 .number(requestAccount.getNumber())
                 .balance(requestAccount.getBalance())
                 .bank(bank)

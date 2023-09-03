@@ -14,4 +14,4 @@ COPY --from=build /app/build/libs/CleverBank-1.0-SNAPSHOT.war /usr/local/tomcat/
 
 EXPOSE 8080
 
-#CMD ["catalina.sh", "run"]
+CMD ["catalina.sh", "run"]
