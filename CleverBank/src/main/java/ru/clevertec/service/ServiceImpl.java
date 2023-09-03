@@ -116,6 +116,7 @@ public class ServiceImpl implements Service {
                 accountDAO.updateAccount(fromAccount);
                 accountDAO.updateAccount(toAccount);
                 transaction = transactionMapper.buildTransaction(requestTransaction);
+                ReceiptPrinter.printReceipt(transaction);
                 transactionDAO.addTransaction(transaction);
                 ReceiptPrinter.printReceipt(transaction);
             }

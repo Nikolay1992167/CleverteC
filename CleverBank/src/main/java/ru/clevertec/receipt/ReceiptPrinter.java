@@ -2,14 +2,13 @@ package ru.clevertec.receipt;
 
 
 import com.aspose.pdf.*;
-import lombok.Data;
 import lombok.NonNull;
 import ru.clevertec.entity.Transaction;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Random;
-@Data
+
 public class ReceiptPrinter {
     public static void printReceipt(@NonNull Transaction transaction) {
         Document doc = new Document();
@@ -73,6 +72,6 @@ public class ReceiptPrinter {
             row8.getCells().add(transaction.getAmount() + " " + transaction.getFromAccount().getCurrency());
         }
         doc.getPages().get_Item(1).getParagraphs().add(table);
-        doc.save("check/receipt" + (new Random().nextInt(90000) + 10000) +".pdf");
+        doc.save("check/receipt" + (new Random().nextInt(90000) + 10000) + ".pdf");
     }
 }
