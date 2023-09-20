@@ -5,13 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
     private Long id;
-    private String name;
-    private String email;
-    private String password;
+    private String lastname;
+    private String firstname;
+    private String surname;
+    private LocalDate registerDate;
+    private String mobileNumber;
 }

@@ -1,39 +1,73 @@
 plugins {
     id 'java'
     id 'war'
+    id 'io.freefair.aspectj.post-compile-weaving' version '8.3'
 }
 
-group = 'ru.clevertec'
-version = '1.0-SNAPSHOT'
+group 'ru.clevertec'
+version '1.0-SNAPSHOT'
 
 repositories {
+    mavenLocal()
     mavenCentral()
-    maven {
-        url 'https://repository.aspose.com/repo/'
-    }
+}
+
+ext {
+    servletVersion = '6.0.0'
+    lombok = '1.18.28'
+    postgresqlVersion = '42.6.0'
+    gsonVersion = '2.10.1'
+    slf4jVersion = '2.0.7'
+    logbackVersion = '1.4.11'
+    snakeYamlVersion = '2.1'
+    liquibaseVersion = '4.23.1'
+    mapstructVersion = '1.5.3.Final'
+    aspectjVersion = '1.9.20'
+    junitVersion = '5.10.0'
+    assertjVersion = '3.24.2'
+    mockitoVersion = '5.5.0'
+}
+
+sourceCompatibility = targetCompatibility = '17'
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
 dependencies {
+    compileOnly "jakarta.servlet:jakarta.servlet-api:${servletVersion}"
+    compileOnly "org.projectlombok:lombok:${lombok}"
 
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    implementation 'org.apache.commons:commons-configuration2:2.9.0'
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'org.postgresql:postgresql:42.6.0'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2'
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+    runtimeOnly "org.aspectj:aspectjrt:${aspectjVersion}"
+    runtimeOnly "org.aspectj:aspectjweaver:${aspectjVersion}"
 
-    implementation group: 'com.aspose', name: 'aspose-pdf', version: '21.9', classifier: 'jdk17'
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+    implementation "ch.qos.logback:logback-core:${logbackVersion}"
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    implementation "org.yaml:snakeyaml:${snakeYamlVersion}"
+    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.aspectj:aspectjtools:${aspectjVersion}"
 
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
-    compileOnly 'org.projectlombok:lombok:1.18.28'
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.assertj:assertj-core:${assertjVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
 
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
-    testImplementation 'org.mockito:mockito-core:3.12.4'
-    testImplementation 'org.assertj:assertj-core:3.24.2'
+compileJava {
+    options.annotationProcessorPath = configurations.annotationProcessor
+    options.compilerArgs += [
+            '-Amapstruct.unmappedTargetPolicy=IGNORE'
+    ]
 }
 
 test {

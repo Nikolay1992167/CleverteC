@@ -6,18 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
-    private Long id;
-    private String currency;
-    private LocalDateTime dateOpen;
-    private String number;
+
+    private String id;
+    private Currency currency;
     private BigDecimal balance;
+    private LocalDate openingDate;
+    private LocalDate closingDate;
     private Bank bank;
     private User user;
 }

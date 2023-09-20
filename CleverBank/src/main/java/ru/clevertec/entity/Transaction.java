@@ -6,20 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
-    private Long id;
-    private TypeTransaction typeTransaction;
-    @Builder.Default
-    private Account fromAccount = null;
-    @Builder.Default
-    private Account toAccount = null;
-    private BigDecimal amount;
-    private LocalDateTime date;
-}
 
+    private Long id;
+    private LocalDate date;
+    private LocalTime time;
+    private Type type;
+    private Long bankSenderId;
+    private Long bankRecipientId;
+    private String accountSenderId;
+    private String accountRecipientId;
+    private BigDecimal sum;
+}
